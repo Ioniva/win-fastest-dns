@@ -2,7 +2,7 @@
 
 void inicializar_struct_dns_mas_rapida(dns_mas_rapida* dnsMasRapida) {
 
-    // Inicializamos el struct con el valor 0 
+    // Inicializamos el struct con el valor 0
     memset(dnsMasRapida, 0, sizeof(dns_mas_rapida));
 }
 
@@ -57,11 +57,11 @@ void escribirEnTemporal(char text[SIZE], FILE* archivoTemporal) {
 
     // Comprobar si se ha creado el fichero temporal
     if (archivoTemporal != NULL) {
-        
+
         // Mientras la logitud del texto a guardar sea menor al contador
         // guardar caracter en el fichero temporal
         while (++counter < length) {
-            
+
             // Guardar caracter por caracter en el fichero temporal
             fputc(text[counter], archivoTemporal);
         }
@@ -114,7 +114,7 @@ void filtrarDireccionDNS(char adaptador[SIZE]) {
                     printf("%s\n", removeLeadingSpaces(linea));
                 }
             }
-            
+
             // Cerramos el archivo abierto
             fclose(fp);
             // Eliminamos el archivo sobrante
@@ -152,7 +152,7 @@ FILE* comprobarDireccion(dns_mas_rapida dnsMasRapida) {
 
         // Variable que tendra el comando a ejecutar
         char comando[SIZE] = "ping > nul " ;
-        
+
         // Concatenamos el comando con con la direccion
         strcat(comando, dnsMasRapida.direcionesDNS[i], "\n");
         // Ejecutamos el comando batch
@@ -174,7 +174,7 @@ FILE* comprobarDireccion(dns_mas_rapida dnsMasRapida) {
 }
 
 dns_mas_rapida obtenerDnsMasRapida(FILE* archivoTemporal, dns_mas_rapida dnsMasRapida) {
-    
+
     // Creamos e inicializamos las variables
     int mejorTiempo = INT_MAX; // Variable de referencia que guarda los mejores tiempo, INT_MAX es el limite maximo
     char* mejorDNS = ""; // Varible de referencia que guardara la mejor ip (dependiendo de la variable "mejorTiempo")
@@ -192,7 +192,7 @@ dns_mas_rapida obtenerDnsMasRapida(FILE* archivoTemporal, dns_mas_rapida dnsMasR
         strtok(linea, "\n");
         // Ejecutamos la funcion de filtrarVelocidad para obtener el tiempo de respuesta de la IP
         tiempo = filtrarVelocidad(linea);
-        
+
         // Comprobamos si el tiempo devuelto es menor que el anterior
         if (tiempo < mejorTiempo) {
 
@@ -215,11 +215,11 @@ int filtrarVelocidad(char ip[SIZE]) {
     char* tiempo = ""; // Variable que contiene el tiempo devuelto por el comando ping
     char linea[SIZE] = ""; // Variable que contiene la linea del archivo
     char comando[SIZE] = "ping "; // Variable que tendra el comando a ejecutar
-    
+
     // Completamos el comando a ejecutar
     strcat(comando, ip); // Concatenamos el comando con el servidor DNS
-    strcat(comando, " > ping.txt"); // Concatenamos el comando con la exportacion del resultado a un fichero 
-    
+    strcat(comando, " > ping.txt"); // Concatenamos el comando con la exportacion del resultado a un fichero
+
     // Comprobamos que el comando se haya ejecutado correctamente
     if (system(comando) == 0) {
 
@@ -228,20 +228,20 @@ int filtrarVelocidad(char ip[SIZE]) {
         // Ruta = ruta donde se encuentra el fichero a abrir
         // Modo = que queremos hacer con ese fichero, "r" es igual a modo lectura
         if ((fp = fopen("ping.txt", "r")) != NULL) {
-            
+
             // Recorremos el fichero hasta llegar a su final
             while (feof(fp) != 1) {
 
                 // Leemos una linea del fichero y la guardamos en una variable
                 fgets(linea, SIZE, fp);
-                // Comprobamos que la linea actual contenga "Media = " 
+                // Comprobamos que la linea actual contenga "Media = "
                 if (strstr(linea, "Media = ") != NULL) {
-                    
+
                     // Filtramos el resultado de la linea
                     tiempo = strstr(linea, "Media = "); // Devuelve la parte de "Media"
                     tiempo = strtok(tiempo, "ms"); // Utilizando el resultado anterior, eliminamos el texto "ms"
                     tiempo = strtok(tiempo, "Media = "); // Utilizanod el resultado anterior, eliminamos el texto "Media = "
-                    
+
                     // Convertimos el texto a integro
                     // Devolvemos el valor de tipo integro
                     return atoi(tiempo);
@@ -269,7 +269,7 @@ int filtrarVelocidad(char ip[SIZE]) {
 }
 
 int actualizarAdaptador(char adaptador[SIZE], char dns[SIZE]) {
-    
+
     // Creamos e inicializamos las variables
     char comando[SIZE] = "netsh interface ipv4 add dnsserver name="; // Variable que tendra el comando a ejecutar
 
@@ -305,7 +305,7 @@ void limpiarTemporales() {
 
     // Recorrer el arreglo con los ficheros a eliminar
     for (int i = 0; i < 3; i++) {
-        // Eliminar archivo temporal y comprobar si se ha ejecutado correctamente 
+        // Eliminar archivo temporal y comprobar si se ha ejecutado correctamente
         remove(ficherosParaEliminar[i]);
     }
 }
